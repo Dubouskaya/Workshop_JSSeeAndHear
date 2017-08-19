@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<title>Creative Coding Yea!</title>
+<head>
+<meta charset="utf-8">
+
+<script language="javascript" src="../js/creative_coding.js"></script>
+<script language="javascript" src="../js/canvas.js"></script>
+
+<link rel="stylesheet" href="../css/reset.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../css/audio.css" type="text/css" media="screen" />
+
+</head>
+<body>
+
+<script>
+
+// LET's ADD SOUND
+
+
+var ctx = createCanvas("canvas1");
+
+ctx.lineWidth = 2;
+
+function setup(){
+  console.log(Sound);
+}
+
+var balls = [];
+var max_balls = 10;
+
+var spacing = w/max_balls;
+
+for (var i = 0; i < max_balls; i++) {
+  addBall(i*spacing + spacing/2, h/2);
+}
+
+function addBall(_x, _y){
+  balls.push(new Ball(_x, _y));
+}
+
+
+function draw(){
+
+  ctx.background(250, 0.1);
+
+  for (var i = 0; i < Sound.spectrum.length/2; i++) {
+    if (Sound.spectrum[i] > 10) {
+      addBall(map(Sound.spectrum[i], 0, 200, 0, w), h/2);
+    }
+  }
+
+  for (var i = 0; i < balls.length; i++) {
+    var b = balls[i];
+    b.moveBall();
+    b.drawBall();
+
+  }
+
+} // end draw
+
+
+
+
+// BALL OBJECT
+
+function Ball(_x, _y, _i){
+  this.x = _x;
+  this.y = _y;
+  this.start_x = _x;
+  this.start_y = _y;
+
+  this.me = _i;
+  this.sz = 10;
+  this.speed_x = random(-1, 1);
+  this.speed_y = random(-5, 5);
+  this.c = rgb(random(255), 0, 0);
+
+
+  this.drawBall = function(){
+    ctx.fillStyle = this.c;
+    ctx.fillEllipse(this.x, this.y, this.sz, this.sz);
+
+  }
+  this.moveBall = function(){
+    this.x += this.speed_x;
+    this.y += this.speed_y;
+    //this.speed_y += 0.4;
+    this.sz -= 0.3;
+
+    if (this.x > width || this.x < 0  || this.y > height || this.y < 0 || this.sz < 1 ) {
+      balls.splice(0, 1);
+    }
+  }
+
+}
+
+
+
+
+</script>
+<script language="javascript" src="../js/soundcloud.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<title>Sound &amp; Motion - George Gally - Radarboy</title>
+<head>
+<meta charset="utf-8">
+
+<script language="javascript" src="../js/creative_coding.js"></script>
+<script language="javascript" src="../js/canvas.js"></script>
+<script language="javascript" src="../js/mic.js"></script>
+<script language="javascript" src="../js/vector.js"></script>
+<script language="javascript" src="../js/particle_engine.js"></script>
+<script language="javascript" src="../js/quicksettings.min.js"></script>
+
+<link rel="stylesheet" href="../css/reset.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" />
+
+</head>
+<body>
+
+<script>
+
+var ctx = createCanvas("canvas1");
+var engine = new particleEngine(0,0);
+var wave = new particleEngine(40,1);
+engine.edge = false;
+
+engine.max_particles = 500;
+
+var sensitivity = 40;
+
+function draw(){
+
+  ctx.background(245);
+
+  engine.draw();
+  updateWave();
+  //drawWave();
+
+  updateSliders();
+
+}
+
+
+function addParticle(vol, x, y){
+
+  var start_position_x = x;
+  var start_position_y = y;
+
+  // TRY CHANGING THE COLOURS
+  // var colour = rgb(random(255), 0, 0);
+  //var colour = rgb(random(255), 0, random(255));
+  var colour = rgb(0);
+  //var colour = rgb(0, random(55), random(255));
+  engine.add(start_position_x, start_position_y, colour);
+
+  // engine.last let's us target the newest particle
+  engine.last.target_sz = 2;
+  engine.last.sz = vol/4;
+  engine.last.speed = new Vector(random(-2, 2),-vol/10);
+
+}
+
+
+function updateWave(){
+
+  for (var i = 0; i < wave.particles.length; i++) {
+		p = wave.particles[i];
+    var vol = Mic.mapSound(i, wave.particles.length, 0, 50);
+		p.pos.y = p.start.y + vol  - 25;
+
+    if (vol > sensitivity ) {
+      addParticle(vol, p.pos.x, p.pos.y);
+    }
+
+	}
+
+
+}
+
+
+
+function drawWave(){
+
+  for (var i = 0; i < wave.particles.length; i++) {
+		p = wave.particles[i];
+		ctx.fillStyle = "black";
+		ctx.fillEllipse(p.pos.x, p.pos.y, p.sz, p.sz);
+	}
+
+
+}
+
+
+// DON'T REALLY NEED TO CHANGE ANYTHING BELOW HERE
+var options = {
+  sensitivity: sensitivity,
+  max_particles: 1000,
+}
+
+
+//// QuickSettings
+
+var settings = QuickSettings.create(w-200, 0, "Settings");
+
+settings.bindRange("max_particles", 10, 10000, 1500, 1, options);
+settings.addRange("sensitivity", 0, 100, sensitivity, 1);
+
+function updateSliders(){
+  sensitivity = settings.getValue('sensitivity');
+  engine.max_particles = settings.getValue('max_particles');
+
+}
+
+
+
+</script>
+</body>
+
+</html>

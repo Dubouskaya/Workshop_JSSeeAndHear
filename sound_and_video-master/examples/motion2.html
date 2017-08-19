@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<title>Creative Coding Yea!</title>
+<head>
+<meta charset="utf-8">
+
+<script language="javascript" src="../js/creative_coding.js"></script>
+<script language="javascript" src="../js/canvas.js"></script>
+<script language="javascript" src="../js/video.js"></script>
+<script language="javascript" src="../js/vector.js"></script>
+<script language="javascript" src="../js/vector_particles.js"></script>
+<script language="javascript" src="../js/quicksettings.min.js"></script>
+
+<link rel="stylesheet" href="../css/reset.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" />
+
+</head>
+<body>
+
+<script>
+
+
+var ctx = createCanvas("canvas1");
+
+var balls = [];
+var engine = new particleEngine(0);
+
+var options = {
+  resolution: 20,
+  sensitivity: 20,
+  start_size: 5,
+  speed_max_x: 1,
+  speed_max_y: 2,
+  max_particles: 1000,
+  life: 0.98,
+  randomize_x: 0,
+  randomize_y: 0
+}
+
+
+
+function draw(){
+
+  ctx.background(255);
+
+  var motion = Motion.detect();
+  for (var i = 0; i < motion.length; i++) {
+    m = motion[i];
+    engine.addParticle(m.x, m.y, m.colour);
+  }
+
+  engine.draw();
+  drawParticles();
+  updateSliders();
+}
+
+function drawParticles(){
+
+	for (var i = 0; i < engine.particles.length; i++) {
+		p = engine.particles[i];
+		ctx.fillStyle = p.c;
+		ctx.fillEllipse(p.pos.x, p.pos.y, p.sz, p.sz);
+	}
+
+}
+
+
+//// QuickSettings
+
+var settings = QuickSettings.create(w-200, 0, "Settings");
+
+settings.bindRange("start_size", 0.1, 150, 10, 0.1, options);
+settings.bindRange("speed_max_x", 0.1, 50, 1, 0.1, options);
+settings.bindRange("speed_max_y", 0.1, 50, 2, 0.1, options);
+settings.bindRange("randomize_x", 0.1, 50, 0, 0.1, options);
+settings.bindRange("randomize_y", 0.1, 50, 0, 0.1, options);
+settings.bindRange("life", 0.01, 2, 0.98, 0.01, options);
+settings.bindRange("max_particles", 10, 10000, 1500, 1, options);
+settings.bindRange("resolution", 10, 100, 20, 1, options);
+settings.bindRange("sensitivity", 1, 100, 80, 1, options);
+// settings.bindRange("particle_size", 1, 100, 10, 1, options);
+
+function updateSliders(){
+  Motion.resolution = options.resolution;
+  Motion.sensitivity = 100 - options.sensitivity;
+  engine.start_size = options.start_size;
+  engine.speed_max_x = options.speed_max_x;
+  engine.speed_max_y = options.speed_max_y;
+  engine.randomize_x = options.randomize_x;
+  engine.randomize_y = options.randomize_y;
+  engine.max_particles = options.max_particles;
+  engine.life = options.life;
+}
+
+
+</script>
+<script language="javascript" src="../js/motion.js"></script>
+</body>
+
+</html>

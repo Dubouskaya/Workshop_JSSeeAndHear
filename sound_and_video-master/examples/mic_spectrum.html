@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<title>Creative Coding Yea!</title>
+<head>
+<meta charset="utf-8">
+<script language="javascript" src="../js/creative_coding.js"></script>
+<script language="javascript" src="../js/canvas.js"></script>
+<script language="javascript" src="../js/mic.js"></script>
+<link rel="stylesheet" href="../css/reset.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" />
+
+
+</head>
+<body>
+
+<script>
+
+var ctx = createCanvas("canvas1");
+ctx.background(235);
+
+// make a grid 100 wide
+var num_bars = 100;
+var bar_width = w/num_bars;
+
+function draw(){
+
+  ctx.clearRect(0,0,w,h);
+
+  for (var i = 0; i < num_bars; i++) {
+    // Mic.mapSound(_me, _total, _min, _max)
+    var s = Mic.mapRawSound(i, num_bars, 2, h/4);
+    ctx.fillStyle = rgb(0);
+    ctx.fillRect(i * bar_width, h, bar_width - 0.5, -s);
+  }
+
+}
+
+
+
+</script>
+
+</body>
+
+</html>

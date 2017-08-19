@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<title>Creative Coding Yea!</title>
+<head>
+    <meta charset="utf-8">
+<script language="javascript" src="../js/creative_coding.js"></script>
+<script language="javascript" src="../js/canvas.js"></script>
+<script language="javascript" src="../js/quicksettings.min.js"></script>
+<script language="javascript" src="../js/video.js"></script>
+
+<link rel="stylesheet" href="../css/reset.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" />
+
+
+</head>
+<body>
+
+<script>
+
+var ctx2 = createCanvas("canvas2");
+var ctx = createCanvas("canvas1");
+
+var options = {
+  blocksize: 20,
+  sensitivity: 20
+}
+
+
+var maxballs = 1500;
+var balls = [];
+
+
+function draw(){
+
+  ctx.background(250, transparency);
+
+  update();
+
+  for (var i = 0; i < balls.length; i++) {
+    b = balls[i];
+    b.moveBall();
+    b.drawBall();
+
+  } // end for loop
+
+} // end draw
+
+
+
+function removeBall(){
+  balls.splice(0,1);
+}
+
+function update(){
+
+  blocksize = options.blocksize;
+  sensitivity = options.sensitivity;
+  maxballs = options.maxballs;
+  transparency = options.transparency;
+  motion = motionDetection(blocksize);
+
+  for (var i = 0; i < motion.length; i++) {
+    m = motion[i];
+    balls.push(new Ball(m.x, m.y, i));
+    if (balls.length > maxballs) {
+    removeBall();
+    }
+  } // end for loop
+
+}
+
+
+
+
+// BALL OBJECT
+
+function Ball(_x, _y, _i){
+  this.x = _x;
+  this.y = _y;
+  this.start_x = _x;
+  this.start_y = _y;
+
+  this.me = _i;
+  this.block_size = 10;
+  this.speed_x = random(-5, 5);
+  this.speed_y = random(-5, -1);
+  this.c = rgb(random(255), 0, 0);
+
+  this.drawBall = function(){
+    ctx.fillStyle = this.c;
+    ctx.line(this.start_x, this.start_y, this.x, this.y);
+  }
+
+  this.moveBall = function(){
+    this.x += this.speed_x;
+    this.y += this.speed_y;
+    this.speed_y += 0.4;
+    this.block_size -= 0.1;
+    this.start_y += 0.8;
+
+    if (this.x > width || this.x < 0  || this.y > height || this.y < 0 || this.block_size < 1 ) {
+      balls.splice(0, 1);
+    }
+  }
+
+}
+
+
+function getColour(x, y) {
+
+      var pos = (x + y * w);
+      var b = (sourceBuffer32[pos] >> 16) & 0xff;
+      var g = (sourceBuffer32[pos] >> 8) & 0xff;
+      var r = (sourceBuffer32[pos] >> 0) & 0xff;
+
+      return {red: r, green: g, blue: b};
+
+}
+
+//// QuickSettings
+
+var settings = QuickSettings.create(w-200, 0, "Settings");
+settings.bindRange("transparency", 0, 1, 0.5, 0.01, options);
+settings.bindRange("blocksize", 10, 100, 20, 1, options);
+settings.bindRange("sensitivity", 1, 100, 20, 1, options);
+settings.bindRange("maxballs", 100, 50000, 1500, 10, options);
+
+
+
+</script>
+
+<script language="javascript" src="../js/motion_detection.js"></script>
+
+</body>
+
+</html>
