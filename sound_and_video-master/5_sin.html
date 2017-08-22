@@ -26,26 +26,20 @@ var rect_width = w/number_of_bars;
 var radius = 50;
 var num_circles=300;
 var angle = radians(360/num_circles);
+ctx.lineWidth = 2;
 
 
 function draw(){
-  ctx.background(0);
-  ctx.fillStyle = rgba(200, 0, 0);
-  radius = 50 + Mic.getVol();
-  for(var i=0; i<num_circles; i++  ){
-    radius = Mic.mapSound(i, num_circles*2, 100, 200);
-    var x= w/2 +Math.cos(angle*i) * radius;
-    var y = h/2 + Math.sin(angle *i) * radius;
+  //ctx.background(0, 0.2);
+  ctx.fillStyle = rgba(200, 0, 0, 0.2);
+  var x = w/2 + Math.sin(frameCount / 200) * w/2;
 
-    var radius2 = Mic.mapSound(i, num_circles, radius, radius + 100);
+  var y = h/2 + Math.sin(frameCount / 20) * 50;
+  ctx.fillEllipse(x, y, 10, 10);
 
-    var x2= w/2 +Math.cos(angle*i) * radius2;
-    var y2 = h/2 + Math.sin(angle *i) * radius2;
-    var c = map(i, 0, number_of_bars, 0, 300);
-    ctx.strokeStyle=hsl(c, 80, 60);
-    ctx.line(x, y, x2, y2);
-
-  }
+  ctx.fillStyle = rgba(50, 20, 100, 0.1);
+  var x = w/2 + Math.cos(frameCount / 20) * w/2;
+  ctx.fillEllipse(x, h/2, 30, 30);
 
 }
 
